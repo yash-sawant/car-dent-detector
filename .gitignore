@@ -128,8 +128,14 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Pycharm
+.idea
+
 # Custom Folders
 datasets/
 output/
 input/
 test_images/
+
+# Ignore model
+model/best_ap50.pt
