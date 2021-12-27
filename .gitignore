@@ -130,3 +130,6 @@ dmypy.json
 
 # Custom Folders
 datasets/
+output/
+input/
+test_images/
