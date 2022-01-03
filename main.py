@@ -7,12 +7,13 @@ from flask import Flask, request, Response
 import io
 from PIL import ImageFile, Image
 from misc.ml_funcs import get_predictions
+from misc.detect import init_model
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 app = Flask(__name__)
 
-
+MODEL_REF = init_model()
 
 LABELS = open('./model/data.names').read().strip().split('\n')
 

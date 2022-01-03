@@ -19,15 +19,13 @@ def load_classes(path):
     return list(filter(None, names))  # filter removes empty strings (such as last line)
 
 
-def detect(path:str, arg: YoloInputArguments, save_img=False):
+def init_model():
+    # Need to globalize
+    device_name = 0
+    out = 'output'
+    cfg = 'model/yolor_p6_care_dent.cfg'
 
-    opt = arg
-    out, source, weights, view_img, save_txt, imgsz, cfg, names = \
-        opt.output, opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size, opt.cfg, opt.names
-    webcam = source == '0' or source.startswith('rtsp') or source.startswith('http') or source.endswith('.txt')
-
-    # Initialize
-    device = select_device(opt.device)
+    device = select_device(device_name)
     if os.path.exists(out):
         shutil.rmtree(out)  # delete output folder
     os.makedirs(out)  # make new output folder
@@ -42,6 +40,21 @@ def detect(path:str, arg: YoloInputArguments, save_img=False):
     if half:
         model.half()  # to FP16
 
+    return True
+
+def detect(path:str, arg: YoloInputArguments, save_img=False):
+
+    opt = arg
+    out, source, weights, view_img, save_txt, imgsz, cfg, names = \
+        opt.output, opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size, opt.cfg, opt.names
+    webcam = source == '0' or source.startswith('rtsp') or source.startswith('http') or source.endswith('.txt')
+
+    global MODEL_REF
+
+    if not MODEL_REF:
+        MODEL_REF = init_model()
+
+    model = MODEL_REF
     # # Second-stage classifier
     # classify = False
     # if classify:
