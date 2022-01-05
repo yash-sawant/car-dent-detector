@@ -13,7 +13,6 @@ from misc.model_inputs import YoloInputArguments
 
 
 def load_classes(path):
-    # Loads *.names file at 'path'
     with open(path, 'r') as f:
         names = f.read().split('\n')
     return list(filter(None, names))  # filter removes empty strings (such as last line)
@@ -24,45 +23,33 @@ def init_model():
     device_name = 0
     out = 'output'
     cfg = 'model/yolor_p6_care_dent.cfg'
+    imgsz = 640
+    weights = ['model/best_ap50.pt']
 
     device = select_device(device_name)
     if os.path.exists(out):
-        shutil.rmtree(out)  # delete output folder
-    os.makedirs(out)  # make new output folder
-    half = device.type != 'cpu'  # half precision only supported on CUDA
+        shutil.rmtree(out)
+    os.makedirs(out)
+    half = device.type != 'cpu'
 
     # Load model
     model = Darknet(cfg, imgsz).cuda()
     model.load_state_dict(torch.load(weights[0], map_location=device)['model'])
-    # model = attempt_load(weights, map_location=device)  # load FP32 model
-    # imgsz = check_img_size(imgsz, s=model.stride.max())  # check img_size
     model.to(device).eval()
     if half:
         model.half()  # to FP16
 
-    return True
+    return model
 
-def detect(path:str, arg: YoloInputArguments, save_img=False):
+def detect(path:str, model, arg: YoloInputArguments, save_img=False):
 
     opt = arg
     out, source, weights, view_img, save_txt, imgsz, cfg, names = \
         opt.output, opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size, opt.cfg, opt.names
     webcam = source == '0' or source.startswith('rtsp') or source.startswith('http') or source.endswith('.txt')
 
-    global MODEL_REF
-
-    if not MODEL_REF:
-        MODEL_REF = init_model()
-
-    model = MODEL_REF
-    # # Second-stage classifier
-    # classify = False
-    # if classify:
-    #     modelc = load_classifier(name='resnet101', n=2)  # initialize
-    #     modelc.load_state_dict(torch.load('weights/resnet101.pt', map_location=device)['model'])  # load weights
-    #     modelc.to(device).eval()
-
-    # Set Dataloader
+    device = select_device(0)
+    half = device.type != 'cpu'
     vid_path, vid_writer = None, None
     if webcam:
         view_img = True

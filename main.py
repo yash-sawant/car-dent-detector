@@ -53,7 +53,7 @@ def main():
     # Inference
     # Optimisation is pending
     np_img = np.array(img)
-    get_predictions(np_img)
+    get_predictions(np_img,MODEL_REF)
     tags = open('output/temp.txt').read().strip().split('\n')
 
     # Formatting output
@@ -62,4 +62,4 @@ def main():
 
 
 if __name__ == '__main__':
-    app.run(port=80, host='0.0.0.0')
+    app.run(port=80, host='0.0.0.0',debug=True)

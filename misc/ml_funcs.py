@@ -3,7 +3,7 @@ from misc.detect import detect
 import cv2
 
 
-def get_predictions(img):
+def get_predictions(img, model):
     yolo_args = YoloInputArguments(
         output='output',
         source='input',
@@ -17,4 +17,4 @@ def get_predictions(img):
 
     # In the future directly send image data as numpy array
     cv2.imwrite('./input/temp.jpg', img)
-    detect('./input/temp.jpg',yolo_args)
+    detect('./input/temp.jpg',model, yolo_args)
