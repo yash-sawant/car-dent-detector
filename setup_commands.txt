@@ -1,0 +1,7 @@
+
+pip install --upgrade setuptools
+conda install -c anaconda cython
+pip install torch==1.7.0 torchvision==0.8.1 torchaudio===0.7.0 -f https://download.pytorch.org/whl/torch_stable.html
+
+pip install "git+https://github.com/philferriere/cocoapi.git#egg=pycocotools&subdirectory=PythonAPI"
+pip install -r requirements-cpu.txt

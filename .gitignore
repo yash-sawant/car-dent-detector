@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Custom Folders
+datasets/
+output/
+input/
+test_images/
