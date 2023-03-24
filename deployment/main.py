@@ -6,8 +6,8 @@ import os
 from flask import Flask, request, Response
 import io
 from PIL import ImageFile, Image
-from misc.ml_funcs import get_predictions
-from misc.detect import init_model
+from .misc.ml_funcs import get_predictions
+from .misc.detect import init_model
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -15,7 +15,8 @@ app = Flask(__name__)
 
 MODEL_REF = init_model()
 
-LABELS = open('./model/data.names').read().strip().split('\n')
+LABELS = open('../model/data.names').read().strip().split('\n')
+
 
 def convert_to_json(tags):
     '''
@@ -53,7 +54,7 @@ def main():
     # Inference
     # Optimisation is pending
     np_img = np.array(img)
-    get_predictions(np_img,MODEL_REF)
+    get_predictions(np_img)
     tags = open('output/temp.txt').read().strip().split('\n')
 
     # Formatting output
@@ -62,4 +63,4 @@ def main():
 
 
 if __name__ == '__main__':
-    app.run(port=80, host='0.0.0.0',debug=True)
+    app.run(port=80, host='0.0.0.0')
